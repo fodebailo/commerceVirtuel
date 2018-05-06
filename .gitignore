@@ -3,8 +3,8 @@
 ######################
 
 /target/www/**
-/src/main/java/resources/**
-/src/main/java/resources/
+/src/main/resources/**
+/src/main/resources/
 
 ######################
 # Eclipse
