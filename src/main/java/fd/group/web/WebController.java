@@ -34,6 +34,11 @@ public class WebController {
     private Shopping      shopping;
     private double        total;
 
+    @GetMapping("/login")
+    public String connecter() {
+        return "login";
+    }
+
     @ModelAttribute("total")
     public double totalPanier() {
         if (!shopping.getLigneCommandes().isEmpty()) {

@@ -163,6 +163,11 @@ public class UserController {
         return new Client();
     }
 
+    @ModelAttribute("categorie")
+    public Categorie getCategorie() {
+        return new Categorie();
+    }
+
     @GetMapping("/listePanier")
     public String listePanier(Model model) {
         model.addAttribute("ligneCommandes", shopping.getLigneCommandes());
