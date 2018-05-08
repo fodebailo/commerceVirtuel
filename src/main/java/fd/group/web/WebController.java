@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import fd.group.dao.WebRepository;
 import fd.group.entites.Categorie;
 import fd.group.entites.Client;
-import fd.group.entites.Commande;
 import fd.group.entites.Produit;
 import fd.group.service.shopping.Panier;
 import fd.group.service.shopping.Shopping;
@@ -140,18 +139,10 @@ public class WebController {
     public String commander(@Valid Client client, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("client", client);
-            return "redirect:/index#commande";
+            return "index";
         }
 
-        Commande commande = webRepository.enregistrerCommande((Panier) shopping, client);
-
-        if (commande != null) {
-            model.addAttribute("message", "La commande a été bien enregistré !");
-            model.addAttribute("client", new Client());
-        } else {
-            model.addAttribute("message", "Le serveur est temporaiement inaccessible !");
-            model.addAttribute("client", new Client());
-        }
+        webRepository.enregistrerCommande((Panier) shopping, client);
 
         shopping.vider();
 

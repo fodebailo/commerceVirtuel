@@ -23,13 +23,19 @@ import org.springframework.web.multipart.MultipartFile;
 
 import fd.group.dao.UserRepository;
 import fd.group.entites.Categorie;
+import fd.group.entites.Client;
 import fd.group.entites.Produit;
+import fd.group.service.shopping.Panier;
+import fd.group.service.shopping.Shopping;
 
 @Controller
 @RequestMapping("/user")
 public class UserController {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private Shopping       shopping;
+    private double         total;
 
     @ModelAttribute("categories")
     public List<Categorie> allCategorie() {
@@ -113,7 +119,7 @@ public class UserController {
     @GetMapping("/deleteProduit/{id}")
     public String deleteProduit(@PathVariable Long id) {
         userRepository.supprimerProduit(id);
-        return "redirect:/user/monitoring";
+        return "monitoring";
     }
 
     @GetMapping("/produitDisponible")
@@ -136,6 +142,42 @@ public class UserController {
     @PostMapping("/produitParMC")
     public String produitParMC(@Param("motcle") String motcle, Model model) {
         model.addAttribute("produits", userRepository.produitsParMotCle(motcle));
+        return "user";
+    }
+
+    @ModelAttribute("total")
+    public double totalPanier() {
+        if (!shopping.getLigneCommandes().isEmpty()) {
+            shopping.getLigneCommandes().forEach(lc -> {
+                total += (lc.getProduit().getPrix() * lc.getQuantite());
+            });
+            return total;
+        } else {
+            total = 0;
+            return total;
+        }
+    }
+
+    @ModelAttribute("client")
+    public Client getClient() {
+        return new Client();
+    }
+
+    @GetMapping("/listePanier")
+    public String listePanier(Model model) {
+        model.addAttribute("ligneCommandes", shopping.getLigneCommandes());
+        return "user";
+    }
+
+    @GetMapping("/viderPanier")
+    public String viderPanier(Model model) {
+        shopping.vider();
+        return "redirect:/user/index";
+    }
+
+    @GetMapping("/addPanier/{id}")
+    public String addPanier(@PathVariable Long id) {
+        shopping.ajouterProduit(userRepository.getProduit(id));
         return "user";
     }
 
@@ -185,6 +227,20 @@ public class UserController {
         }
 
         return IOUtils.toByteArray(new ByteArrayInputStream(p.getPhoto()));
+    }
+
+    @PostMapping("/commander")
+    public String commander(@Valid Client client, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("client", client);
+            return "user";
+        }
+
+        userRepository.enregistrerCommande((Panier) shopping, client);
+
+        shopping.vider();
+
+        return "redirect:/user/index";
     }
 
 }
