@@ -96,6 +96,32 @@ public class AdminController {
         return "monitoring";
     }
 
+    @PostMapping("/addCategorie")
+    public String addCategorie(@Valid Categorie categorie, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("categorie", categorie);
+            return "monitoring";
+        }
+
+        adminRepository.ajouterCategorie(categorie);
+        model.addAttribute("categorie", new Categorie());
+
+        return "redirect:/admin/monitoring";
+    }
+
+    @PostMapping("/editCategorie")
+    public String editCategorie(@Valid Categorie categorie, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("categorie", categorie);
+            return "monitoring";
+        }
+
+        adminRepository.modifierCategorie(categorie);
+        model.addAttribute("categorie", new Categorie());
+
+        return "redirect:/admin/monitoring";
+    }
+
     @GetMapping("/ajouterProduit/{id}")
     public String ajouterProduit(@PathVariable Long id, Model model) {
         model.addAttribute("id", id);
@@ -119,6 +145,19 @@ public class AdminController {
         return "monitoring";
     }
 
+    @GetMapping("/modifierCategorie/{id}")
+    public String modifierCategorie(@PathVariable Long id, Model model) {
+        Categorie categorie = adminRepository.getCategorie(id);
+
+        if (categorie == null) {
+            return "monitoring";
+        }
+
+        model.addAttribute("action", "modifierCategorie");
+        model.addAttribute("categorie", categorie);
+        return "monitoring";
+    }
+
     @PostMapping("/editProduit/{idCat}")
     public String editProduit(@Valid Produit produit, @PathVariable Long idCat, BindingResult result, Model model,
             MultipartFile file) {
@@ -139,10 +178,21 @@ public class AdminController {
         return "redirect:/admin/monitoring";
     }
 
+    @GetMapping("/deleteCategorie/{id}")
+    public String deleteCategorie(@PathVariable Long id) {
+        adminRepository.supprimerCategrorie(id);
+        return "monitoring";
+    }
+
     @GetMapping("/deleteProduit/{id}")
     public String deleteProduit(@PathVariable Long id) {
         adminRepository.supprimerProduit(id);
         return "monitoring";
+    }
+
+    @ModelAttribute("categorie")
+    public Categorie getCategorie() {
+        return new Categorie();
     }
 
     @ModelAttribute("total")
