@@ -67,8 +67,8 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void modifierProduit(Produit p) {
-        commerceRepository.modifierProduit(p);
+    public void modifierProduit(Produit p, Long idCat) {
+        commerceRepository.modifierProduit(p, idCat);
     }
 
 }

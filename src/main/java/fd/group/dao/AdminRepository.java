@@ -29,7 +29,7 @@ public interface AdminRepository {
 
     void supprimerProduit(Long idP);
 
-    void modifierProduit(Produit p);
+    void modifierProduit(Produit p, Long idCat);
 
     void ajouterCategorie(Categorie c);
 

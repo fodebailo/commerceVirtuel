@@ -86,7 +86,9 @@ public class CommerceRepositoryImpl implements CommerceRepository {
     }
 
     @Override
-    public void modifierProduit(Produit p) {
+    public void modifierProduit(Produit p, Long idCat) {
+        Categorie categorie = getCategorie(idCat);
+        p.setCategorie(categorie);
         em.merge(p);
     }
 
@@ -94,17 +96,18 @@ public class CommerceRepositoryImpl implements CommerceRepository {
     public Commande enregistrerCommande(Shopping shop, Client c) {
         em.persist(c);
 
+        shop.getLigneCommandes().forEach(lc -> {
+            Produit produit = getProduit(lc.getProduit().getId());
+            produit.setQuantite(produit.getQuantite() - lc.getQuantite());
+            em.persist(lc);
+        });
+
         Commande commande = new Commande();
         commande.setClient(c);
         commande.setDateCommande(new Date());
         commande.setLigneCommandes(shop.getLigneCommandes());
 
         em.persist(commande);
-
-        shop.getLigneCommandes().forEach(lc -> {
-            Produit produit = getProduit(lc.getProduit().getId());
-            produit.setQuantite(produit.getQuantite() - lc.getProduit().getQuantite());
-        });
 
         return commande;
     }

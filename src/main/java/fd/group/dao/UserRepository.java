@@ -29,5 +29,5 @@ public interface UserRepository {
 
     void supprimerProduit(Long idP);
 
-    void modifierProduit(Produit p);
+    void modifierProduit(Produit p, Long idCat);
 }

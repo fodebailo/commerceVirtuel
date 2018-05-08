@@ -33,7 +33,7 @@ public interface CommerceRepository {
 
     void supprimerProduit(Long id);
 
-    void modifierProduit(Produit p);
+    void modifierProduit(Produit p, Long idCat);
 
     Commande enregistrerCommande(Shopping shop, Client c);
 }
