@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -24,8 +25,10 @@ public class ECommerceSecurity extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.formLogin().loginPage("/login").and().authorizeRequests().antMatchers("/user/", "/admin/").authenticated()
-                .and().addFilter(new AuthenticationFilter(authenticationManager()));
+        http.csrf().disable().formLogin().loginPage("/login").failureUrl("/login-error").and().logout()
+                .logoutSuccessUrl("/login").and().authorizeRequests().antMatchers("/user/**", "/admin/**")
+                .authenticated().and().addFilterBefore(new AuthentificationFilter(authenticationManager()),
+                        UsernamePasswordAuthenticationFilter.class);
     }
 
 }

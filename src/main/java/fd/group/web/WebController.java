@@ -39,6 +39,12 @@ public class WebController {
         return "login";
     }
 
+    @GetMapping("/login-error")
+    public String loginError(Model model) {
+        model.addAttribute("loginError", true);
+        return "login";
+    }
+
     @ModelAttribute("total")
     public double totalPanier() {
         if (!shopping.getLigneCommandes().isEmpty()) {
