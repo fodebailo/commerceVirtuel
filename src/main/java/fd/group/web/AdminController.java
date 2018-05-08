@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import fd.group.dao.AdminRepository;
 import fd.group.entites.Categorie;
 import fd.group.entites.Client;
+import fd.group.entites.Commande;
 import fd.group.entites.Produit;
 import fd.group.service.shopping.Panier;
 import fd.group.service.shopping.Shopping;
@@ -94,6 +95,61 @@ public class AdminController {
     public String monitoring(Model model) {
         model.addAttribute("produit", new Produit());
         return "monitoring";
+    }
+
+    @PostMapping("/commandeParNom")
+    public String commandeParNom(@Param("nom") String nom, Model model) {
+        List<Commande> commandes = adminRepository.listCommandeParClient(nom);
+
+        if (commandes.isEmpty()) {
+            return "redirect:/admin/checking";
+        }
+
+        else {
+            model.addAttribute("commandes", commandes);
+        }
+        return "checking";
+    }
+
+    @PostMapping("/commandeParDate")
+    public String commandeParDate(@Param("date") String date, Model model) throws Exception {
+
+        List<Commande> commandes = adminRepository.listCommandeParDate(date);
+
+        if (commandes.isEmpty()) {
+            return "redirect:/admin/checking";
+        }
+
+        else {
+            model.addAttribute("commandes", commandes);
+        }
+        return "checking";
+    }
+
+    @PostMapping("/commandeEntreDate")
+    public String commandeEntreDate(@Param("dateDebut") String dateDebut, @Param("dateFin") String dateFin, Model model)
+            throws Exception {
+
+        List<Commande> commandes = adminRepository.listCommandeEntreDate(dateDebut, dateFin);
+
+        if (commandes.isEmpty()) {
+            return "redirect:/admin/checking";
+        }
+
+        else {
+            model.addAttribute("commandes", commandes);
+        }
+        return "checking";
+    }
+
+    @GetMapping("/checking")
+    public String checking(Model model) {
+        if (adminRepository.listCommande().size() <= 10) {
+            model.addAttribute("commandes", adminRepository.listCommande());
+        } else {
+            model.addAttribute("commandes", adminRepository.listCommande().subList(0, 11));
+        }
+        return "checking";
     }
 
     @PostMapping("/addCategorie")

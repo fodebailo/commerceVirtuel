@@ -86,4 +86,24 @@ public class AdminRepositoryImpl implements AdminRepository {
         commerceRepository.modifierCategorie(c);
     }
 
+    @Override
+    public List<Commande> listCommande() {
+        return commerceRepository.listCommande();
+    }
+
+    @Override
+    public List<Commande> listCommandeParDate(String dateCommande) {
+        return commerceRepository.listCommandeParDate(dateCommande);
+    }
+
+    @Override
+    public List<Commande> listCommandeEntreDate(String dateDebut, String dateFin) {
+        return commerceRepository.listCommandeEntreDate(dateDebut, dateFin);
+    }
+
+    @Override
+    public List<Commande> listCommandeParClient(String nomClient) {
+        return commerceRepository.listCommandeParClient(nomClient);
+    }
+
 }

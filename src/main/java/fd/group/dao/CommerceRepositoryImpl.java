@@ -112,4 +112,32 @@ public class CommerceRepositoryImpl implements CommerceRepository {
         return commande;
     }
 
+    @Override
+    public List<Commande> listCommande() {
+        return em.createQuery("select c from Commande c", Commande.class).getResultList();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Commande> listCommandeParDate(String dateCommande) {
+        return em.createNativeQuery("select * from commande  where date_Commande = :date", Commande.class)
+                .setParameter("date", dateCommande).getResultList();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Commande> listCommandeEntreDate(String dateDebut, String dateFin) {
+        return em
+                .createNativeQuery(
+                        "select * from commande where date_commande >= :dateDebut and date_commande <= :dateFin",
+                        Commande.class)
+                .setParameter("dateDebut", dateDebut).setParameter("dateFin", dateFin).getResultList();
+    }
+
+    @Override
+    public List<Commande> listCommandeParClient(String nomClient) {
+        return em.createQuery("select c from Commande c where c.client.nom like :nom", Commande.class)
+                .setParameter("nom", "%" + nomClient + "%").getResultList();
+    }
+
 }

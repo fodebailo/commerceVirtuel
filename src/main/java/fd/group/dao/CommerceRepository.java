@@ -36,4 +36,12 @@ public interface CommerceRepository {
     void modifierProduit(Produit p, Long idCat);
 
     Commande enregistrerCommande(Shopping shop, Client c);
+
+    List<Commande> listCommande();
+
+    List<Commande> listCommandeParDate(String date);
+
+    List<Commande> listCommandeEntreDate(String dateDebut, String dateFin);
+
+    List<Commande> listCommandeParClient(String nomClient);
 }

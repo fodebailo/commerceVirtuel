@@ -36,4 +36,12 @@ public interface AdminRepository {
     void supprimerCategrorie(Long idcat);
 
     void modifierCategorie(Categorie c);
+
+    List<Commande> listCommande();
+
+    List<Commande> listCommandeParDate(String date);
+
+    List<Commande> listCommandeEntreDate(String dateDebut, String dateFin);
+
+    List<Commande> listCommandeParClient(String nomClient);
 }
